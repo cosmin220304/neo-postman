@@ -1,15 +1,17 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { serveStatic } from 'hono/deno';
+import { proxy } from './routes/proxy.ts';
 
 const app = new Hono();
 
 // Middleware
 app.use('*', logger());
 app.use(
-  '*',
+  '/api/*',
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    origin: '*',
     allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
   })
@@ -23,12 +25,17 @@ app.get('/health', (c) => {
   });
 });
 
-// TODO: Add routes
-// app.route('/api/proxy', proxyRoutes);
-// app.route('/api/sync', syncRoutes);
+// API routes
+app.route('/api/proxy', proxy);
+
+// Serve static frontend files (production)
+app.use('/*', serveStatic({ root: './static' }));
+
+// SPA fallback - serve index.html for all non-API routes
+app.get('*', serveStatic({ path: './static/index.html' }));
 
 const port = parseInt(Deno.env.get('PORT') || '8000');
 
-console.log(`Neo-Postman backend starting on port ${port}...`);
+console.log(`Neo-Postman starting on port ${port}...`);
 
 Deno.serve({ port }, app.fetch);

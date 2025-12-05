@@ -22,7 +22,9 @@
   },
   "lint": {
     "rules": {
-      "tags": ["recommended"]
+      "tags": [
+        "recommended"
+      ]
     }
   },
   "fmt": {
@@ -30,5 +32,13 @@
     "lineWidth": 100,
     "indentWidth": 2,
     "singleQuote": true
+  },
+  "deploy": {
+    "project": "baf38f77-8667-42b8-a2da-e2a24b82bc72",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "src/main.ts"
   }
 }

@@ -219,7 +219,7 @@ export const HistoryEntrySchema = z.object({
 export const ProxyRequestSchema = z.object({
   method: HttpMethodSchema,
   url: z.string().url(),
-  headers: z.record(z.string()).optional(),
+  headers: z.record(z.string(), z.string()).optional(),
   body: z.string().nullable().optional(),
   timeout: z.number().int().min(0).max(300000).default(30000),
 });
@@ -230,7 +230,7 @@ export const ProxyRequestSchema = z.object({
 export const ProxyResponseSchema = z.object({
   status: z.number().int(),
   statusText: z.string(),
-  headers: z.record(z.string()),
+  headers: z.record(z.string(), z.string()),
   body: z.string(),
   bodyTruncated: z.boolean(),
   size: z.number().int().nonnegative(),

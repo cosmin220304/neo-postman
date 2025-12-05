@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "build": "./build.sh",
+    "start": "cd backend && deno task start",
+    "dev": "cd backend && deno task dev"
+  }
+}

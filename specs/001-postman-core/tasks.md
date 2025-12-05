@@ -36,15 +36,15 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T012 Setup IndexedDB with Dexie in frontend/src/services/db.ts
-- [ ] T013 Create database schema (environments, collections, folders, requests, history tables) in frontend/src/services/db.ts
-- [ ] T014 [P] Create base UI components (Button, Input, Select, Tabs) in frontend/src/components/ui/ per ui-guidelines.md
-- [ ] T015 [P] Setup Zustand store boilerplate in frontend/src/stores/
-- [ ] T016 [P] Create API client service in frontend/src/services/api.ts
-- [ ] T017 [P] Setup Hono app with CORS and JSON middleware in backend/src/main.ts
-- [ ] T018 [P] Create health check endpoint in backend/src/routes/health.ts
-- [ ] T019 Setup backend Zod schemas in backend/src/models/schema.ts
-- [ ] T020 Create main App layout with sidebar + main panel in frontend/src/App.tsx per ui-guidelines.md layout spec
+- [x] T012 Setup IndexedDB with Dexie in frontend/src/services/db.ts
+- [x] T013 Create database schema (environments, collections, folders, requests, history tables) in frontend/src/services/db.ts
+- [x] T014 [P] Create base UI components (Button, Input, Select, Tabs) in frontend/src/components/ui/ per ui-guidelines.md
+- [x] T015 [P] Setup Zustand store boilerplate in frontend/src/stores/
+- [x] T016 [P] Create API client service in frontend/src/services/api.ts
+- [x] T017 [P] Setup Hono app with CORS and JSON middleware in backend/src/main.ts
+- [x] T018 [P] Create health check endpoint in backend/src/routes/health.ts
+- [x] T019 Setup backend Zod schemas in backend/src/models/schema.ts
+- [x] T020 Create main App layout with sidebar + main panel in frontend/src/App.tsx per ui-guidelines.md layout spec
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -58,31 +58,31 @@
 
 ### Backend (Proxy Service)
 
-- [ ] T021 [US1] Create proxy route handler in backend/src/routes/proxy.ts
-- [ ] T022 [US1] Implement proxy service with fetch + timeout in backend/src/services/proxy.service.ts
-- [ ] T023 [US1] Add timing measurement (total, firstByte) in backend/src/services/proxy.service.ts
-- [ ] T024 [US1] Handle large responses (truncate at 10MB) in backend/src/services/proxy.service.ts
-- [ ] T025 [US1] Add error handling (timeout, network, DNS errors) in backend/src/services/proxy.service.ts
+- [x] T021 [US1] Create proxy route handler in backend/src/routes/proxy.ts
+- [x] T022 [US1] Implement proxy service with fetch + timeout in backend/src/services/proxy.service.ts
+- [x] T023 [US1] Add timing measurement (total, firstByte) in backend/src/services/proxy.service.ts
+- [x] T024 [US1] Handle large responses (truncate at 10MB) in backend/src/services/proxy.service.ts
+- [x] T025 [US1] Add error handling (timeout, network, DNS errors) in backend/src/services/proxy.service.ts
 
 ### Frontend (Request Builder)
 
-- [ ] T026 [US1] Create request store with method, URL, headers, body state in frontend/src/stores/request.store.ts
-- [ ] T027 [US1] Create MethodSelector component (GET, POST, etc.) in frontend/src/components/request-builder/MethodSelector.tsx
-- [ ] T028 [US1] Create UrlBar component with input in frontend/src/components/request-builder/UrlBar.tsx
-- [ ] T029 [US1] Create HeadersEditor component (add/edit/remove/toggle) in frontend/src/components/request-builder/HeadersEditor.tsx
-- [ ] T030 [US1] Create BodyEditor component with type selector (JSON, form-data, raw) in frontend/src/components/request-builder/BodyEditor.tsx
-- [ ] T031 [US1] Integrate Monaco Editor for JSON body in frontend/src/components/request-builder/BodyEditor.tsx
-- [ ] T032 [US1] Create RequestBuilder container component with card styling and spotlight effect in frontend/src/components/request-builder/RequestBuilder.tsx per ui-guidelines.md
-- [ ] T033 [US1] Create useRequest hook (send via proxy, handle response) in frontend/src/hooks/useRequest.ts
+- [x] T026 [US1] Create request store with method, URL, headers, body state in frontend/src/stores/request.store.ts
+- [x] T027 [US1] Create MethodSelector component (GET, POST, etc.) in frontend/src/components/request-builder/MethodSelector.tsx
+- [x] T028 [US1] Create UrlBar component with input in frontend/src/components/request-builder/UrlBar.tsx
+- [x] T029 [US1] Create HeadersEditor component (add/edit/remove/toggle) in frontend/src/components/request-builder/HeadersEditor.tsx
+- [x] T030 [US1] Create BodyEditor component with type selector (JSON, form-data, raw) in frontend/src/components/request-builder/BodyEditor.tsx
+- [x] T031 [US1] Integrate Monaco Editor for JSON body in frontend/src/components/request-builder/BodyEditor.tsx
+- [x] T032 [US1] Create RequestBuilder container component with card styling and spotlight effect in frontend/src/components/request-builder/RequestBuilder.tsx per ui-guidelines.md
+- [x] T033 [US1] Create useRequest hook (send via proxy, handle response) in frontend/src/hooks/useRequest.ts
 
 ### Frontend (Response Viewer)
 
-- [ ] T034 [US1] Create ResponseViewer container with card styling, loading/error states in frontend/src/components/response-viewer/ResponseViewer.tsx per ui-guidelines.md
-- [ ] T035 [US1] Create ResponseStatus component (status code, time, size) in frontend/src/components/response-viewer/ResponseStatus.tsx
-- [ ] T036 [US1] Create ResponseHeaders component in frontend/src/components/response-viewer/ResponseHeaders.tsx
-- [ ] T037 [US1] Create ResponseBody component with JSON formatting in frontend/src/components/response-viewer/ResponseBody.tsx
-- [ ] T038 [US1] Add loading state during request in frontend/src/components/response-viewer/ResponseViewer.tsx
-- [ ] T039 [US1] Add error state display for failed requests in frontend/src/components/response-viewer/ResponseViewer.tsx
+- [x] T034 [US1] Create ResponseViewer container with card styling, loading/error states in frontend/src/components/response-viewer/ResponseViewer.tsx per ui-guidelines.md
+- [x] T035 [US1] Create ResponseStatus component (status code, time, size) in frontend/src/components/response-viewer/ResponseStatus.tsx
+- [x] T036 [US1] Create ResponseHeaders component in frontend/src/components/response-viewer/ResponseHeaders.tsx
+- [x] T037 [US1] Create ResponseBody component with JSON formatting in frontend/src/components/response-viewer/ResponseBody.tsx
+- [x] T038 [US1] Add loading state during request in frontend/src/components/response-viewer/ResponseViewer.tsx
+- [x] T039 [US1] Add error state display for failed requests in frontend/src/components/response-viewer/ResponseViewer.tsx
 
 **Checkpoint**: User Story 1 complete - basic HTTP client functional
 
