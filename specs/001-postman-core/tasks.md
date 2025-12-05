@@ -21,7 +21,7 @@
 - [ ] T003 [P] Initialize backend with Deno + Hono in backend/
 - [ ] T004 [P] Configure TypeScript strict mode in frontend/tsconfig.json
 - [ ] T005 [P] Configure ESLint + Prettier in frontend/.eslintrc.cjs and frontend/.prettierrc
-- [ ] T006 [P] Configure Tailwind CSS with design tokens (colors, shadows, animations) in frontend/tailwind.config.ts per prompt-for-fe.md
+- [ ] T006 [P] Configure Tailwind CSS with design tokens (colors, shadows, animations) in frontend/tailwind.config.ts per ui-guidelines.md
 - [ ] T007 [P] Setup Vitest in frontend/vite.config.ts
 - [ ] T008 [P] Create deno.json with tasks (dev, test, lint) in backend/deno.json
 - [ ] T009 Create shared Zod schemas in frontend/src/types/schemas.ts

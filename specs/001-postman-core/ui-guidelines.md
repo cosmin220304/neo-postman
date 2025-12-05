@@ -2,13 +2,13 @@
 
 **Feature**: 001-postman-core  
 **Date**: 2025-12-05  
-**Design System**: Linear/Modern (see `/prompt-for-fe.md`)
+**Design System**: Linear/Modern
 
 ## Overview
 
 Neo-Postman follows the Linear/Modern design system - a dark, cinematic aesthetic with ambient lighting effects, multi-layer shadows, and precision micro-interactions. The goal is software that feels like a premium desktop application.
 
-**Source of Truth**: `/prompt-for-fe.md` contains the complete design system specification.
+**Design Philosophy**: Precision, depth, and fluidity. Every surface exists in three-dimensional space with soft ambient light. The aesthetic is "premium developer tools" - fast, responsive, and obsessively crafted like Linear, Vercel, or Raycast.
 
 ---
 

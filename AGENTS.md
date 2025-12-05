@@ -122,7 +122,7 @@ const response = await fetch('/api/proxy', {
 
 ## UI/Design System
 
-Frontend follows the **Linear/Modern** design system defined in `prompt-for-fe.md`.
+Frontend follows the **Linear/Modern** design system defined in `specs/001-postman-core/ui-guidelines.md`.
 
 **Key Design Tokens:**
 - Background: `#050506` (base), `#0a0a0c` (elevated)
@@ -162,7 +162,6 @@ Frontend follows the **Linear/Modern** design system defined in `prompt-for-fe.m
 | API contract | `specs/001-postman-core/contracts/api.yaml` |
 | Data model | `specs/001-postman-core/data-model.md` |
 | UI guidelines | `specs/001-postman-core/ui-guidelines.md` |
-| Design system | `prompt-for-fe.md` |
 
 ## Known Gotchas
 
