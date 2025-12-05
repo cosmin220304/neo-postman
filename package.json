@@ -1,0 +1,42 @@
+{
+  "name": "neo-postman",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A web-based API client (Postman alternative)",
+  "scripts": {
+    "dev:frontend": "cd frontend && pnpm dev",
+    "dev:backend": "cd backend && deno task dev",
+    "build": "cd frontend && pnpm build",
+    "test": "cd frontend && pnpm test:run",
+    "lint": "cd frontend && pnpm lint",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosmin220304/neo-postman.git"
+  },
+  "keywords": [
+    "postman",
+    "api-client",
+    "http-client"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cosmin220304/neo-postman/issues"
+  },
+  "homepage": "https://github.com/cosmin220304/neo-postman#readme",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  },
+  "lint-staged": {
+    "frontend/src/**/*.{ts,tsx}": [
+      "cd frontend && pnpm exec eslint --fix",
+      "cd frontend && pnpm exec prettier --write"
+    ],
+    "frontend/src/**/*.css": [
+      "cd frontend && pnpm exec prettier --write"
+    ]
+  }
+}

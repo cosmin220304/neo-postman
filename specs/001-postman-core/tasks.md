@@ -16,17 +16,17 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create monorepo structure with frontend/ and backend/ directories
-- [ ] T002 [P] Initialize frontend with Vite + React + TypeScript in frontend/
-- [ ] T003 [P] Initialize backend with Deno + Hono in backend/
-- [ ] T004 [P] Configure TypeScript strict mode in frontend/tsconfig.json
-- [ ] T005 [P] Configure ESLint + Prettier in frontend/.eslintrc.cjs and frontend/.prettierrc
-- [ ] T006 [P] Configure Tailwind CSS with design tokens (colors, shadows, animations) in frontend/tailwind.config.ts per ui-guidelines.md
-- [ ] T007 [P] Setup Vitest in frontend/vite.config.ts
-- [ ] T008 [P] Create deno.json with tasks (dev, test, lint) in backend/deno.json
-- [ ] T009 Create shared Zod schemas in frontend/src/types/schemas.ts
-- [ ] T010 [P] Create TypeScript types from schemas in frontend/src/types/index.ts
-- [ ] T011 [P] Setup Husky pre-commit hooks in .husky/pre-commit
+- [x] T001 Create monorepo structure with frontend/ and backend/ directories
+- [x] T002 [P] Initialize frontend with Vite + React + TypeScript in frontend/
+- [x] T003 [P] Initialize backend with Deno + Hono in backend/
+- [x] T004 [P] Configure TypeScript strict mode in frontend/tsconfig.json
+- [x] T005 [P] Configure ESLint + Prettier in frontend/.eslintrc.cjs and frontend/.prettierrc
+- [x] T006 [P] Configure Tailwind CSS with design tokens (colors, shadows, animations) in frontend/tailwind.config.ts per ui-guidelines.md
+- [x] T007 [P] Setup Vitest in frontend/vite.config.ts
+- [x] T008 [P] Create deno.json with tasks (dev, test, lint) in backend/deno.json
+- [x] T009 Create shared Zod schemas in frontend/src/types/schemas.ts
+- [x] T010 [P] Create TypeScript types from schemas in frontend/src/types/index.ts
+- [x] T011 [P] Setup Husky pre-commit hooks in .husky/pre-commit
 
 ---
 
