@@ -1,0 +1,650 @@
+openapi: 3.1.0
+info:
+  title: Neo-Postman Backend API
+  description: |
+    Backend API for Neo-Postman. Provides two main functions:
+    1. CORS Proxy - Route HTTP requests through the server to bypass browser CORS restrictions
+    2. Team Sync - Store and synchronize collections, environments, and requests across team members
+  version: 1.0.0
+  contact:
+    name: Neo-Postman
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+tags:
+  - name: Proxy
+    description: CORS proxy endpoints
+  - name: Sync
+    description: Team synchronization endpoints
+  - name: Health
+    description: Health check endpoints
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns server status
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ok]
+                  timestamp:
+                    type: string
+                    format: date-time
+                required: [status, timestamp]
+
+  /api/proxy:
+    post:
+      tags: [Proxy]
+      summary: Proxy an HTTP request
+      description: |
+        Forwards an HTTP request to the target URL and returns the response.
+        This bypasses browser CORS restrictions by making the request server-side.
+      operationId: proxyRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProxyRequest'
+      responses:
+        '200':
+          description: Proxied response (success or error from target)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProxyResponse'
+        '400':
+          description: Invalid request configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Proxy server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/sync/projects:
+    post:
+      tags: [Sync]
+      summary: Create a new sync project
+      description: Creates a new shared project for team collaboration
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  pattern: '^[a-zA-Z0-9_-]+$'
+                  description: Unique project identifier
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 100
+                  description: Project access password
+              required: [name, password]
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncProjectInfo'
+        '409':
+          description: Project name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/sync/projects/{projectName}/join:
+    post:
+      tags: [Sync]
+      summary: Join an existing project
+      description: Authenticate and join an existing sync project
+      operationId: joinProject
+      parameters:
+        - name: projectName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+              required: [password]
+      responses:
+        '200':
+          description: Successfully joined project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncProjectInfo'
+        '401':
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/sync/projects/{projectName}/changes:
+    get:
+      tags: [Sync]
+      summary: Get changes since timestamp
+      description: Returns all changes to the project since the given timestamp
+      operationId: getChanges
+      parameters:
+        - name: projectName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: since
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: ISO 8601 timestamp to get changes after
+      security:
+        - projectAuth: []
+      responses:
+        '200':
+          description: List of changes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  changes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SyncChange'
+                  serverTime:
+                    type: string
+                    format: date-time
+                    description: Current server time (use as 'since' for next poll)
+                required: [changes, serverTime]
+        '401':
+          description: Not authenticated to this project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/sync/projects/{projectName}/push:
+    post:
+      tags: [Sync]
+      summary: Push local changes
+      description: Upload local changes to the sync server
+      operationId: pushChanges
+      parameters:
+        - name: projectName
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - projectAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                changes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SyncChangeInput'
+                clientId:
+                  type: string
+                  description: Unique client identifier
+              required: [changes, clientId]
+      responses:
+        '200':
+          description: Changes accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accepted:
+                    type: integer
+                    description: Number of changes accepted
+                  serverTime:
+                    type: string
+                    format: date-time
+                required: [accepted, serverTime]
+        '401':
+          description: Not authenticated to this project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/sync/projects/{projectName}/snapshot:
+    get:
+      tags: [Sync]
+      summary: Get full project snapshot
+      description: Returns all current data for the project (for initial sync)
+      operationId: getSnapshot
+      parameters:
+        - name: projectName
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - projectAuth: []
+      responses:
+        '200':
+          description: Full project snapshot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSnapshot'
+        '401':
+          description: Not authenticated to this project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    projectAuth:
+      type: http
+      scheme: bearer
+      description: JWT token received from join/create project endpoints
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+      required: [error, message]
+
+    ProxyRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS]
+        url:
+          type: string
+          format: uri
+          description: Target URL (fully resolved, no variables)
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Request headers as key-value pairs
+        body:
+          type: string
+          nullable: true
+          description: Request body (for POST, PUT, PATCH)
+        timeout:
+          type: integer
+          minimum: 0
+          maximum: 300000
+          default: 30000
+          description: Request timeout in milliseconds (0 = no timeout)
+      required: [method, url]
+
+    ProxyResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code from target
+        statusText:
+          type: string
+          description: HTTP status text
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: string
+          description: Response body (may be truncated)
+        bodyTruncated:
+          type: boolean
+          description: True if response exceeded 10MB and was truncated
+        size:
+          type: integer
+          description: Original response size in bytes
+        timing:
+          $ref: '#/components/schemas/Timing'
+        error:
+          type: object
+          nullable: true
+          properties:
+            type:
+              type: string
+              enum: [timeout, network, dns, ssl, unknown]
+            message:
+              type: string
+          required: [type, message]
+      required: [status, statusText, headers, body, bodyTruncated, size, timing]
+
+    Timing:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total request time in milliseconds
+        dns:
+          type: integer
+          description: DNS lookup time in ms
+        connect:
+          type: integer
+          description: TCP connection time in ms
+        tls:
+          type: integer
+          description: TLS handshake time in ms
+        firstByte:
+          type: integer
+          description: Time to first byte in ms
+        download:
+          type: integer
+          description: Content download time in ms
+      required: [total]
+
+    SyncProjectInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        token:
+          type: string
+          description: JWT token for authenticating subsequent requests
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, name, token, createdAt]
+
+    SyncChange:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        entityType:
+          type: string
+          enum: [environment, collection, folder, request]
+        entityId:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum: [create, update, delete]
+        data:
+          type: object
+          nullable: true
+          description: Entity data (null for delete operations)
+        timestamp:
+          type: string
+          format: date-time
+        clientId:
+          type: string
+      required: [id, entityType, entityId, operation, timestamp, clientId]
+
+    SyncChangeInput:
+      type: object
+      properties:
+        entityType:
+          type: string
+          enum: [environment, collection, folder, request]
+        entityId:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum: [create, update, delete]
+        data:
+          type: object
+          nullable: true
+      required: [entityType, entityId, operation]
+
+    ProjectSnapshot:
+      type: object
+      properties:
+        environments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Environment'
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collection'
+        folders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Folder'
+        requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/SavedRequest'
+        serverTime:
+          type: string
+          format: date-time
+      required: [environments, collections, folders, requests, serverTime]
+
+    Environment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/Variable'
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        syncProjectId:
+          type: string
+          format: uuid
+          nullable: true
+      required: [id, name, variables, isActive, createdAt, updatedAt]
+
+    Variable:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        enabled:
+          type: boolean
+      required: [key, value, enabled]
+
+    Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        auth:
+          $ref: '#/components/schemas/AuthConfig'
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        syncProjectId:
+          type: string
+          format: uuid
+          nullable: true
+      required: [id, name, description, sortOrder, createdAt, updatedAt]
+
+    Folder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        collectionId:
+          type: string
+          format: uuid
+        parentFolderId:
+          type: string
+          format: uuid
+          nullable: true
+        auth:
+          $ref: '#/components/schemas/AuthConfig'
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, name, collectionId, sortOrder, createdAt, updatedAt]
+
+    SavedRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        method:
+          type: string
+          enum: [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS]
+        url:
+          type: string
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+        body:
+          $ref: '#/components/schemas/RequestBody'
+        auth:
+          $ref: '#/components/schemas/AuthConfig'
+        timeout:
+          type: integer
+        collectionId:
+          type: string
+          format: uuid
+        folderId:
+          type: string
+          format: uuid
+          nullable: true
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, name, method, url, headers, timeout, collectionId, sortOrder, createdAt, updatedAt]
+
+    Header:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        enabled:
+          type: boolean
+      required: [key, value, enabled]
+
+    RequestBody:
+      type: object
+      nullable: true
+      properties:
+        type:
+          type: string
+          enum: [json, form-data, x-www-form-urlencoded, raw, binary]
+        content:
+          type: string
+        binaryFileName:
+          type: string
+      required: [type, content]
+
+    AuthConfig:
+      type: object
+      nullable: true
+      properties:
+        type:
+          type: string
+          enum: [none, bearer, api-key]
+        bearer:
+          type: object
+          properties:
+            token:
+              type: string
+        apiKey:
+          type: object
+          properties:
+            key:
+              type: string
+            value:
+              type: string
+            in:
+              type: string
+              enum: [header, query]
+      required: [type]
