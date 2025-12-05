@@ -120,6 +120,35 @@ const response = await fetch('/api/proxy', {
 - JWT auth per project
 - History is NOT synced (local only)
 
+## UI/Design System
+
+Frontend follows the **Linear/Modern** design system defined in `prompt-for-fe.md`.
+
+**Key Design Tokens:**
+- Background: `#050506` (base), `#0a0a0c` (elevated)
+- Accent: `#5E6AD2` (indigo) for interactive elements
+- Text: `#EDEDEF` (primary), `#8A8F98` (muted)
+- Borders: `rgba(255,255,255,0.06)`
+
+**Signature Elements (Required):**
+- Multi-layer shadows on all cards (never single shadows)
+- Mouse-tracking spotlight effect on interactive surfaces
+- Gradient text for headings (`from-white to-white/70`)
+- 200-300ms expo-out animations for all transitions
+- Ambient glow effects on accent buttons
+
+**HTTP Method Colors:**
+- GET: emerald, POST: blue, PUT: amber, PATCH: violet, DELETE: red
+
+**Component Guidelines:** See `specs/001-postman-core/ui-guidelines.md` for detailed component styling.
+
+**Anti-patterns to Avoid:**
+- Pure black (`#000000`) - use near-blacks instead
+- Pure white text - use `#EDEDEF`
+- Single shadows - always use multi-layer
+- Bouncy animations - use expo-out easing
+- Flat backgrounds - always layer gradients + ambient light
+
 ## Key Files
 
 | Purpose | Location |
@@ -132,6 +161,8 @@ const response = await fetch('/api/proxy', {
 | Zod schemas | `backend/src/models/schema.ts` |
 | API contract | `specs/001-postman-core/contracts/api.yaml` |
 | Data model | `specs/001-postman-core/data-model.md` |
+| UI guidelines | `specs/001-postman-core/ui-guidelines.md` |
+| Design system | `prompt-for-fe.md` |
 
 ## Known Gotchas
 

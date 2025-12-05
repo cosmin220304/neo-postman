@@ -30,7 +30,8 @@ Build a web-based API client (Postman clone) with request builder, environments/
 **Scale/Scope**: 
 - 2-20 users per sync project
 - 1,000+ saved requests per user
-- 10,000+ history entries
+- 10,000+ history entries  
+**Design System**: Linear/Modern dark theme (see `prompt-for-fe.md` and `ui-guidelines.md`)
 
 ## Constitution Check
 
